@@ -1,0 +1,24 @@
+{
+  "name": "tritt-importer",
+  "description": "Import your Tritt elements easily.",
+  "version": "0.1.0",
+  "authors": "T-Jay Tipps",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deansredhalo/tritt-importer"
+  },
+  "keywords": [
+    "web-components",
+    "data binding",
+    "custom elements",
+    "html imports"
+  ],
+  "main": "tritt.js",
+  "private": false,
+  "dependencies": {
+    "webcomponentsjs": "*",
+    "object.observe": "~0.2.3",
+    "tritt": "*"
+  },
+  "license": "MIT"
+}
