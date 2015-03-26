@@ -1,35 +1,50 @@
 var TrittImporter = TrittImporter || {}
+var bodyFOUC
+var head
 var elementName
 var link
+var content
+var el
 
 TrittImporter.init = function () {
+  TrittImporter.preventFOUC('hide')
   window.addEventListener('HTMLImportsLoaded', function () {
     link = document.querySelector('link[rel="import"]')
-    TrittImporter.removeTrittBase(link)
-    TrittImporter.parseImports(link)
-    TrittImporter.applyScripts(link)
+    content = link.import
+    TrittImporter.removeTrittBase()
+    TrittImporter.parseImports()
+    TrittImporter.applyScripts()
+    TrittImporter.preventFOUC('show')
   })
 }
 
-TrittImporter.removeTrittBase = function (link) {
-  var content = link.import
+TrittImporter.preventFOUC = function (status) {
+  if (status === 'hide') {
+    bodyFOUC = document.createElement('style')
+    bodyFOUC.textContent = 'body { opacity: 0; }'
+    head = document.querySelector('head')
+    head.insertBefore(bodyFOUC, head.firstChild)
+  } else {
+    head.firstChild.remove()
+  }
+}
+
+TrittImporter.removeTrittBase = function () {
   var script = content.querySelector('script[src="../bower_components/tritt/tritt.js"]')
   script.remove()
 }
 
-TrittImporter.parseImports = function (link) {
+TrittImporter.parseImports = function () {
   elementName = link.attributes.href.value.split('.')[0]
-  var content = link.import
-  var el = content.querySelector(elementName)
+  el = content.querySelector(elementName)
   var hostElement = document.querySelector(elementName)
+  TrittImporter.distributeContent(hostElement)
   document.body.insertBefore(el.cloneNode(true), hostElement)
   document.body.removeChild(hostElement)
 }
 
-TrittImporter.applyScripts = function (link) {
-  var content = link.import
+TrittImporter.applyScripts = function () {
   var scripts = content.querySelectorAll('script')
-  var head = document.querySelector('head')
   var scriptName
   var scriptContents
   var scriptNode
@@ -52,6 +67,12 @@ TrittImporter.applyScripts = function (link) {
       scripts[i].remove()
     }
   }
+}
+
+TrittImporter.distributeContent = function (host) {
+  var distributedContent = host.innerHTML
+  var contentNode = content.querySelector('distributed-content')
+  contentNode.innerHTML = distributedContent
 }
 
 TrittImporter.fetchScript = function (script) {
