@@ -7,7 +7,7 @@ TrittImporter.init = function () {
     link = document.querySelector('link[rel="import"]')
     TrittImporter.removeTrittBase(link)
     TrittImporter.parseImports(link)
-    TrittImporter.applyScripts(link) 
+    TrittImporter.applyScripts(link)
   })
 }
 
@@ -17,7 +17,7 @@ TrittImporter.removeTrittBase = function (link) {
   script.remove()
 }
 
-TrittImporter.parseImports = function (link) {  
+TrittImporter.parseImports = function (link) {
   elementName = link.attributes.href.value.split('.')[0]
   var content = link.import
   var el = content.querySelector(elementName)
@@ -30,15 +30,16 @@ TrittImporter.applyScripts = function (link) {
   var content = link.import
   var scripts = content.querySelectorAll('script')
   var head = document.querySelector('head')
+  var scriptName
   var scriptContents
   var scriptNode
 
   scriptNode = document.createElement('script')
   scriptNode.setAttribute('type', 'text/javascript')
-  
+
   for (var i = 0; i < scripts.length; i++) {
     scriptName = elementName + '.js'
-    if (scripts[i].attributes.src  && scripts[i].attributes.src.value === scriptName) {
+    if (scripts[i].attributes.src && scripts[i].attributes.src.value === scriptName) {
       scriptContents = scripts[i].attributes.src.value
       TrittImporter.fetchScript(scriptContents).then(function (response) {
         scriptNode.textContent = response
