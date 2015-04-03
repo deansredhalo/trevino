@@ -2,7 +2,7 @@
 
 /****************************************************
 *
-* Tritt-Importer.js
+* Trevino.js
 * Simple, HTML imports for
 * modular Tritt elements.
 *
@@ -12,7 +12,7 @@
 ****************************************************/
 
 // namespace
-var TrittImporter = TrittImporter || {}
+var Trevino = Trevino || {}
 
 /**
  * Global variables for all items that we create.
@@ -31,15 +31,15 @@ var el
  *
  * @function init
  */
-TrittImporter.init = function () {
-  TrittImporter.preventFOUC('hide')
+Trevino.init = function () {
+  Trevino.preventFOUC('hide')
   window.addEventListener('HTMLImportsLoaded', function () {
     link = document.querySelector('link[rel="import"]')
     content = link.import
-    TrittImporter.removeTrittBase()
-    TrittImporter.parseImports()
-    TrittImporter.applyScripts()
-    TrittImporter.preventFOUC('show')
+    Trevino.removeTrittBase()
+    Trevino.parseImports()
+    Trevino.applyScripts()
+    Trevino.preventFOUC('show')
   })
 }
 
@@ -49,7 +49,7 @@ TrittImporter.init = function () {
  * @function preventFOUC
  * @param {string} status Either 'show' or 'hide'.
  */
-TrittImporter.preventFOUC = function (status) {
+Trevino.preventFOUC = function (status) {
   if (status === 'hide') {
     bodyFOUC = document.createElement('style')
     bodyFOUC.textContent = 'body { opacity: 0; }'
@@ -65,7 +65,7 @@ TrittImporter.preventFOUC = function (status) {
  *
  * @function removeTrittBase
  */
-TrittImporter.removeTrittBase = function () {
+Trevino.removeTrittBase = function () {
   var script = content.querySelector('script[src="../bower_components/tritt/tritt.js"]')
   script.remove()
 }
@@ -77,11 +77,11 @@ TrittImporter.removeTrittBase = function () {
  *
  * @function parseImports
  */
-TrittImporter.parseImports = function () {
+Trevino.parseImports = function () {
   elementName = link.attributes.href.value.split('.')[0]
   el = content.querySelector(elementName)
   var hostElement = document.querySelector(elementName)
-  TrittImporter.distributeContent(hostElement)
+  Trevino.distributeContent(hostElement)
   document.body.insertBefore(el.cloneNode(true), hostElement)
   document.body.removeChild(hostElement)
 }
@@ -92,7 +92,7 @@ TrittImporter.parseImports = function () {
  *
  * @function applyScripts
  */
-TrittImporter.applyScripts = function () {
+Trevino.applyScripts = function () {
   var scripts = content.querySelectorAll('script')
   var scriptName
   var scriptContents
@@ -105,7 +105,7 @@ TrittImporter.applyScripts = function () {
     scriptName = elementName + '.js'
     if (scripts[i].attributes.src && scripts[i].attributes.src.value === scriptName) {
       scriptContents = scripts[i].attributes.src.value
-      TrittImporter.fetchScript(scriptContents).then(function (response) {
+      Trevino.fetchScript(scriptContents).then(function (response) {
         scriptNode.textContent = response
         head.appendChild(scriptNode)
       })
@@ -125,7 +125,7 @@ TrittImporter.applyScripts = function () {
  * @function distributeContent
  * @param {object} host The element that is going to receive the content.
  */
-TrittImporter.distributeContent = function (host) {
+Trevino.distributeContent = function (host) {
   var distributedContent = host.innerHTML
   var contentNode = content.querySelector('content')
   contentNode.innerHTML = distributedContent
@@ -138,7 +138,7 @@ TrittImporter.distributeContent = function (host) {
  * @param {string} script Filename to go and get
  * @returns {string} response The responseText of the file
  */
-TrittImporter.fetchScript = function (script) {
+Trevino.fetchScript = function (script) {
   var xmlhttp
 
   return new Promise(function (resolve, reject) {
@@ -153,4 +153,4 @@ TrittImporter.fetchScript = function (script) {
     })
 }
 
-TrittImporter.init()
+Trevino.init()

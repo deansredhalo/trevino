@@ -1,11 +1,11 @@
 {
-  "name": "tritt-importer",
+  "name": "trevino",
   "description": "Import your Tritt elements easily.",
   "version": "0.1.0",
   "authors": "T-Jay Tipps",
   "repository": {
     "type": "git",
-    "url": "https://github.com/deansredhalo/tritt-importer"
+    "url": "https://github.com/deansredhalo/trevino"
   },
   "keywords": [
     "web-components",
@@ -13,7 +13,7 @@
     "custom elements",
     "html imports"
   ],
-  "main": "tritt.js",
+  "main": "trevino.js",
   "private": false,
   "dependencies": {
     "webcomponentsjs": "*",
