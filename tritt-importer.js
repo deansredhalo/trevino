@@ -1,4 +1,24 @@
+'use strict'
+
+/****************************************************
+*
+* Tritt-Importer.js
+* Simple, HTML imports for
+* modular Tritt elements.
+*
+* Author: T-Jay Tipps
+* https://github.com/deansredhalo/tritt-importer
+*
+****************************************************/
+
+// namespace
 var TrittImporter = TrittImporter || {}
+
+/**
+ * Global variables for all items that we create.
+ *
+ * @global
+ */
 var bodyFOUC
 var head
 var elementName
@@ -6,6 +26,11 @@ var link
 var content
 var el
 
+/*
+ * Main initialization function
+ *
+ * @function init
+ */
 TrittImporter.init = function () {
   TrittImporter.preventFOUC('hide')
   window.addEventListener('HTMLImportsLoaded', function () {
@@ -18,6 +43,12 @@ TrittImporter.init = function () {
   })
 }
 
+/*
+ * Hide body to prevent FOUC
+ *
+ * @function preventFOUC
+ * @param {string} status Either 'show' or 'hide'.
+ */
 TrittImporter.preventFOUC = function (status) {
   if (status === 'hide') {
     bodyFOUC = document.createElement('style')
@@ -29,11 +60,23 @@ TrittImporter.preventFOUC = function (status) {
   }
 }
 
+/*
+ * Removes the main Tritt script from the imported page.
+ *
+ * @function removeTrittBase
+ */
 TrittImporter.removeTrittBase = function () {
   var script = content.querySelector('script[src="../bower_components/tritt/tritt.js"]')
   script.remove()
 }
 
+/*
+ * This is the main chunk of work.  Finds the imports
+ * and does the dirty work of parsing them and placing
+ * them in the document in their proper place.
+ *
+ * @function parseImports
+ */
 TrittImporter.parseImports = function () {
   elementName = link.attributes.href.value.split('.')[0]
   el = content.querySelector(elementName)
@@ -43,6 +86,12 @@ TrittImporter.parseImports = function () {
   document.body.removeChild(hostElement)
 }
 
+/*
+ * Grabs the scripts on the import and
+ * parses them into the main document.
+ *
+ * @function applyScripts
+ */
 TrittImporter.applyScripts = function () {
   var scripts = content.querySelectorAll('script')
   var scriptName
@@ -69,28 +118,37 @@ TrittImporter.applyScripts = function () {
   }
 }
 
+/*
+ * Copies the content found inside the element on the main doc
+ * and places it inside the <content> tag in the custom element.
+ *
+ * @function distributeContent
+ * @param {object} host The element that is going to receive the content.
+ */
 TrittImporter.distributeContent = function (host) {
   var distributedContent = host.innerHTML
-  var contentNode = content.querySelector('distributed-content')
+  var contentNode = content.querySelector('content')
   contentNode.innerHTML = distributedContent
 }
 
+/*
+ * Helper function to go get our script file.
+ *
+ * @function fetchScript
+ * @param {string} script Filename to go and get
+ * @returns {string} response The responseText of the file
+ */
 TrittImporter.fetchScript = function (script) {
   var xmlhttp
 
-  // create a new Promise object
   return new Promise(function (resolve, reject) {
-      // new XMLHttpRequest object
       xmlhttp = new XMLHttpRequest() //eslint-disable-line
-      // do a get
       xmlhttp.open('GET', script, true)
-      // if everything goes smoothly, resolve with the contents of the file
       xmlhttp.onreadystatechange = function () {
         if (xmlhttp.status === 200 && xmlhttp.readyState === 4) {
           resolve(this.responseText)
         }
       }
-      // send our request
       xmlhttp.send()
     })
 }

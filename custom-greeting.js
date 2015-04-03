@@ -10,6 +10,10 @@ Tritt('custom-greeting', { //eslint-disable-line
     }
   },
   bindings: {
-    userName: 'Reveal user name...'
+    userName: 'Reveal user name...',
+    address: {
+      city: 'Nashville',
+      state: 'TN'
+    }
   }
 })
