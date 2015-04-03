@@ -23,7 +23,7 @@ Once installation is completed, you can import Trevino and webcomponentsjs polyf
 <script type="text/javascript" src="bower_components/trevino/trevino.js"></script>
 ```
 
-At the end of your body, right before the closing **</body>** tag, import Tritt.
+At the end of your body, right before the closing **BODY** tag, import Tritt.
 
 ```html
 <script type="text/javascript" src="bower_components/tritt/tritt.js"></script>
