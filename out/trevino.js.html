@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: trevino.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: trevino.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>'use strict'
+
+/****************************************************
+*
+* Trevino.js
+* Simple, HTML imports for
+* modular Tritt elements.
+*
+* Author: T-Jay Tipps
+* https://github.com/deansredhalo/tritt-importer
+*
+****************************************************/
+
+// namespace
+var Trevino = Trevino || {}
+
+/**
+ * Global variables for all items that we create.
+ *
+ * @global
+ */
+var bodyFOUC
+var head
+var elementName
+var link
+var content
+var el
+
+/*
+ * Main initialization function
+ *
+ * @function init
+ */
+Trevino.init = function () {
+  Trevino.preventFOUC('hide')
+  window.addEventListener('HTMLImportsLoaded', function () {
+    link = document.querySelector('link[rel="import"]')
+    content = link.import
+    Trevino.removeTrittBase()
+    Trevino.parseImports()
+    Trevino.applyScripts()
+    Trevino.preventFOUC('show')
+  })
+}
+
+/*
+ * Hide body to prevent FOUC
+ *
+ * @function preventFOUC
+ * @param {string} status Either 'show' or 'hide'.
+ */
+Trevino.preventFOUC = function (status) {
+  if (status === 'hide') {
+    bodyFOUC = document.createElement('style')
+    bodyFOUC.textContent = 'body { opacity: 0; }'
+    head = document.querySelector('head')
+    head.insertBefore(bodyFOUC, head.firstChild)
+  } else {
+    head.firstChild.remove()
+  }
+}
+
+/*
+ * Removes the main Tritt script from the imported page.
+ *
+ * @function removeTrittBase
+ */
+Trevino.removeTrittBase = function () {
+  var script = content.querySelector('script[src="../bower_components/tritt/tritt.js"]')
+  script.remove()
+}
+
+/*
+ * This is the main chunk of work.  Finds the imports
+ * and does the dirty work of parsing them and placing
+ * them in the document in their proper place.
+ *
+ * @function parseImports
+ */
+Trevino.parseImports = function () {
+  elementName = link.attributes.href.value.split('.')[0]
+  el = content.querySelector(elementName)
+  var hostElement = document.querySelector(elementName)
+  Trevino.distributeContent(hostElement)
+  document.body.insertBefore(el.cloneNode(true), hostElement)
+  document.body.removeChild(hostElement)
+}
+
+/*
+ * Grabs the scripts on the import and
+ * parses them into the main document.
+ *
+ * @function applyScripts
+ */
+Trevino.applyScripts = function () {
+  var scripts = content.querySelectorAll('script')
+  var scriptName
+  var scriptContents
+  var scriptNode
+
+  scriptNode = document.createElement('script')
+  scriptNode.setAttribute('type', 'text/javascript')
+
+  for (var i = 0; i &lt; scripts.length; i++) {
+    scriptName = elementName + '.js'
+    if (scripts[i].attributes.src && scripts[i].attributes.src.value === scriptName) {
+      scriptContents = scripts[i].attributes.src.value
+      Trevino.fetchScript(scriptContents).then(function (response) {
+        scriptNode.textContent = response
+        head.appendChild(scriptNode)
+      })
+    } else {
+      scriptContents = scripts[i].textContent
+      scriptNode.textContent = scriptContents
+      head.appendChild(scriptNode)
+      scripts[i].remove()
+    }
+  }
+}
+
+/*
+ * Copies the content found inside the element on the main doc
+ * and places it inside the &lt;content> tag in the custom element.
+ *
+ * @function distributeContent
+ * @param {object} host The element that is going to receive the content.
+ */
+Trevino.distributeContent = function (host) {
+  var distributedContent = host.innerHTML
+  var contentNode = content.querySelector('content')
+  contentNode.innerHTML = distributedContent
+}
+
+/*
+ * Helper function to go get our script file.
+ *
+ * @function fetchScript
+ * @param {string} script Filename to go and get
+ * @returns {string} response The responseText of the file
+ */
+Trevino.fetchScript = function (script) {
+  var xmlhttp
+
+  return new Promise(function (resolve, reject) {
+      xmlhttp = new XMLHttpRequest() //eslint-disable-line
+      xmlhttp.open('GET', script, true)
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.status === 200 && xmlhttp.readyState === 4) {
+          resolve(this.responseText)
+        }
+      }
+      xmlhttp.send()
+    })
+}
+
+Trevino.init()
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Global</h3><ul><li><a href="global.html#applyScripts">applyScripts</a></li><li><a href="global.html#bodyFOUC">bodyFOUC</a></li><li><a href="global.html#distributeContent">distributeContent</a></li><li><a href="global.html#fetchScript">fetchScript</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#parseImports">parseImports</a></li><li><a href="global.html#preventFOUC">preventFOUC</a></li><li><a href="global.html#removeTrittBase">removeTrittBase</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Apr 03 2015 12:54:50 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

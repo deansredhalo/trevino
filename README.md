@@ -4,7 +4,7 @@
 
 ### Import your Tritt-based custom elements
 
-Trevino is a simple tool to allow you to import your custom Tritt elements into your page and have them live completely autonomously. Tritt and the Trevino is built on top of Google's [webcomponentsjs](https://www.github.com/webcomponents/webcomponentsjs) polyfills.
+Trevino is a simple tool to allow you to import your custom Tritt elements into your page and have them live completely autonomously. Tritt and Trevino is built on top of Google's [webcomponentsjs](https://www.github.com/webcomponents/webcomponentsjs) polyfills.
 
 Like all of my current projects, it's named after a 90s era country star, this one being named after Rick Trevino.
 
